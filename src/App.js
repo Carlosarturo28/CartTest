@@ -4,6 +4,7 @@ import data from "./products.json";
 import { useEffect, useState } from "react";
 import { ContextSuppliers } from "./useContext/ContextSuppliers";
 import { useAddToCart } from "./useHooks/useAddToCart";
+import toast, { Toaster } from 'react-hot-toast';
 
 const fetchActiveSuppliers = async () => {
   try {
@@ -19,6 +20,16 @@ export default function App() {
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState({});
   const { cart, addToCart } = useAddToCart("cart");
+
+  const notify = (content, type) => {
+    switch(type) {
+      case "success":
+        toast[type](content);
+      break;
+      default:
+        toast(content);
+    }
+  }
 
   useEffect(() => {
     const getSuppliers = async () => {
@@ -36,7 +47,8 @@ export default function App() {
         selectedSupplier,
         setSelectedSupplier,
         addToCart,
-        cart
+        cart,
+        notify
       }}
     >
       <div className="App">
@@ -44,6 +56,7 @@ export default function App() {
           <Card key={index} product={item} />
         ))}
       </div>
+      <Toaster position="top-right"/>
     </ContextSuppliers.Provider>
   );
 }
